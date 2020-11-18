@@ -4,11 +4,14 @@ import TableContainer from './TableContainer';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import Image from "material-ui-image";
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
+import RiffImage from "./components/RiffImage";
 
 const App = () => {
     const [data, setData] = useState([]);
+    const [selectedPitch, setSelectedPitch] = useState("c");
+    const [selectedOctave, setSelectedOctave] = useState(0);
     useEffect(() => {
         const doFetch = async () => {
             const response = await fetch('https://api.improviser.education/v1/exercises/scales');
@@ -20,27 +23,32 @@ const App = () => {
         doFetch();
     }, []);
 
+    const renderRowSubComponent = (row) => {
+        const {
+            name,
+            image
+        } = row.original
+        return (
+            <Container style={{ width: '18rem', margin: '0 auto' }}>
+                <Container>
+                    <Container>
+                        <strong>{name}</strong>
+                        <RiffImage id={image} name={image} pitch={selectedPitch} octave={selectedOctave} />
+                    </Container>
+                </Container>
+            </Container>
+        );
+    };
+
     const columns = useMemo(
         () => [
             {
-                Header: "View Scale",
-                id: "id",
-                accessor: d => (
-                    <div>
-                        <IconButton><VisibilityIcon /></IconButton>
-                    </div>
-                ),
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-            },
-            {
-                Header: 'Image',
-                accessor: d => (
-                    <div>
-                        <Image src={d.image} />
-                    </div>
+                Header: () => null,
+                id: 'expander', // 'id' is required
+                Cell: ({ row }) => (
+                    <span {...row.getToggleRowExpandedProps()}>
+            {row.isExpanded ? <IconButton><VisibilityOffIcon /></IconButton> : <IconButton><VisibilityIcon /></IconButton>}
+          </span>
                 ),
             },
             {
@@ -52,8 +60,16 @@ const App = () => {
                 accessor: 'chord',
             },
             {
+                Header: 'Name',
+                accessor: 'name',
+            },
+            {
                 Header: 'Created',
                 accessor: 'created_at',
+            },
+            {
+                Header: 'Image',
+                accessor: d => <RiffImage id={d.id} name={d.image} pitch={selectedPitch} octave={selectedOctave} />
             },
         ],
         []
@@ -61,7 +77,7 @@ const App = () => {
 
     return (
         <Container style={{ marginTop: 100 }}>
-            <TableContainer columns={columns} data={data} />
+            <TableContainer columns={columns} data={data} renderRowSubComponent={renderRowSubComponent} />
         </Container>
     );
 };
