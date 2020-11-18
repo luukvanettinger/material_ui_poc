@@ -1,6 +1,6 @@
 import React from 'react';
 import Input from '@material-ui/core/Input';
-import TextField from '@material-ui/core/TextField';
+import SearchIcon from '@material-ui/icons/Search';
 
 export const Filter = ({ column }) => {
     return (
@@ -22,7 +22,7 @@ export const DefaultColumnFilter = ({
             onChange={(e) => {
                 setFilter(e.target.value || undefined);
             }}
-            placeholder={`search (${length}) ...`}
+            placeholder={``}
         />
     );
 };

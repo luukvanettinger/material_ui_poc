@@ -14,6 +14,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 
 
 const TableContainer = ({ columns, data, renderRowSubComponent }) => {
@@ -101,8 +102,8 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
             })}
             </TableBody>
         </Table>
-            <Container style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
-                <Container md={3}>
+            <Box display="flex" style={{ maxWidth: "100%", marginTop: "3%", marginBottom: "1%", textAlign: 'center' }}>
+                <Box md={3}>
                     <Button
                         color='primary'
                         onClick={() => gotoPage(0)}
@@ -117,14 +118,14 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
                     >
                         {'<'}
                     </Button>
-                </Container>
-                <Container md={2} style={{ marginTop: 7 }}>
+                </Box>
+                <Box md={2} style={{ marginTop: 7, marginLeft: "15%" }}>
                     Page{' '}
                     <strong>
                         {pageIndex + 1} of {pageOptions.length}
                     </strong>
-                </Container>
-                <Container md={2}>
+                </Box>
+                <Box style={{marginLeft: "10%"}} md={2}>
                     <Input
                         type='number'
                         min={1}
@@ -133,8 +134,8 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
                         defaultValue={pageIndex + 1}
                         onChange={onChangeInInput}
                     />
-                </Container>
-                <Container md={2}>
+                </Box>
+                <Box style={{marginLeft: "10%"}} md={2}>
                     <Input
                         type='number'
                         value={pageSize}
@@ -147,8 +148,8 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
                             </option>
                         ))}
                     </Input>
-                </Container>
-                <Container md={3}>
+                </Box>
+                <Box style={{marginLeft: "15%"}} md={3}>
                     <Button color='primary' onClick={nextPage} disabled={!canNextPage}>
                         {'>'}
                     </Button>
@@ -159,8 +160,8 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
                     >
                         {'>>'}
                     </Button>
-                </Container>
-            </Container>
+                </Box>
+            </Box>
         </Fragment>
     );
 };
