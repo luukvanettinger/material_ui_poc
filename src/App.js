@@ -8,41 +8,15 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import RiffImage from "./components/RiffImage";
-import { requestScalesData } from "./utils/ScalesData";
 
 const App = () => {
-    const [data, setData] = useState([]);
     const [selectedPitch, setSelectedPitch] = useState("c");
     const [selectedOctave, setSelectedOctave] = useState(0);
-
-    useEffect(() => {
-        const doFetch = async () => {
-            const response = await fetch('https://api.improviser.education/v1/exercises/scales');
-            const body = await response.json();
-            const contacts = body;
-            console.log(contacts);
-            setData(contacts);
-        };
-        doFetch();
-    }, []);
-
-    const fetchData = (tableState) => {
-        let filtered = [...tableState.filtered];
-        debugger
-        requestScalesData(tableState.pageSize, tableState.page, tableState.sorted, filtered).then(res => {
-            this.setState({
-                scales: res.rows,
-                pages: res.pages,
-                loading: false
-            });
-        });
-    }
 
     const renderRowSubComponent = (row) => {
         const {
@@ -114,8 +88,6 @@ const App = () => {
         <Container style={{ marginTop: 40 }}>
             <TableContainer
                 columns={columns}
-                data={data}
-                onFetchData={fetchData}
                 renderRowSubComponent={renderRowSubComponent}
             />
 

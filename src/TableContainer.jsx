@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, {Fragment, useState} from 'react';
 import { useTable, useSortBy, useFilters, useExpanded, usePagination } from "react-table"
 import { Filter, DefaultColumnFilter } from './components/filters';
 
@@ -13,11 +13,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IconButton from "@material-ui/core/IconButton";
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
-import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import {requestScalesData} from "./utils/ScalesData";
 
 
-const TableContainer = ({ columns, data, renderRowSubComponent }) => {
+const TableContainer = ({ columns, renderRowSubComponent }) => {
+    const [ currentData, setCurrentData ] = useState([]);
+    const [ pages, setPages ] = useState(0);
+    const [ sorted, setSorted] = useState([{id: "created_at", desc: true}]);
     const {
         getTableProps,
         getTableBodyProps,
@@ -33,10 +36,14 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
         nextPage,
         previousPage,
         setPageSize,
-        state: { pageIndex, pageSize }
+        state: { pageIndex, pageSize },
+
     } = useTable({
         columns,
-        data,
+        data: currentData,
+        pages: pages,
+        manualPagination: true,
+            pageCount: 20,
         defaultColumn: { Filter: DefaultColumnFilter},
         initialState: { pageIndex: 0, pageSize: 10 }
     },
@@ -45,6 +52,19 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
         useExpanded,
         usePagination
     );
+
+    React.useEffect(() => {
+        let filtered = [];
+
+        console.log("pageSize:",pageSize)
+        console.log("pageIndex:",pageIndex)
+        debugger
+
+        requestScalesData(pageSize, pageIndex, sorted, filtered).then(res => {
+            setCurrentData(res.rows)
+        })
+    }, [pageIndex, pageSize])
+
 
     const generateSortingIndicator = (column) => {
         return column.isSorted ? (column.isSortedDesc ? <IconButton><ExpandMoreIcon /></IconButton> : <IconButton><ExpandLessIcon /></IconButton> ) : '';
@@ -125,7 +145,7 @@ const TableContainer = ({ columns, data, renderRowSubComponent }) => {
                         {pageIndex + 1} of {pageOptions.length}
                     </strong>
                 </Box>
-                <Box style={{marginLeft: "10%"}} md={2}>
+                <Box style={{marginLeft: "10%"}} md={1}>
                     <Input
                         type='number'
                         min={1}

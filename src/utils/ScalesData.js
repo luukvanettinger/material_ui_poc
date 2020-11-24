@@ -1,7 +1,7 @@
 import { get_paginated_scales } from "./Client";
 
-export const requestScalesData = (pageSize, page, sorted, filtered) => {
-    const paginate_query = `[${page * (pageSize - 1)},${pageSize - 1 + page * (pageSize - 1)}]`;
+export const requestScalesData = (pageSize, pageIndex, sorted, filtered) => {
+    const paginate_query = `[${pageIndex * (pageSize - 1)},${pageSize - 1 + pageIndex * (pageSize - 1)}]`;
     let sort_query = [];
     sorted.forEach(item => {
         sort_query.push(item.id);
